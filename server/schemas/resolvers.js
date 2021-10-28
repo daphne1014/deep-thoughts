@@ -38,8 +38,9 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
+      const token = signToken(user);
 
-      return user;
+      return { token, user };
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -79,10 +80,10 @@ const resolvers = {
           { $push: { reactions: { reactionBody, username: context.user.username } } },
           { new: true, runValidators: true }
         );
-    
+
         return updatedThought;
       }
-    
+
       throw new AuthenticationError('You need to be logged in!');
     },
     addFriend: async (parent, { friendId }, context) => {
@@ -92,10 +93,10 @@ const resolvers = {
           { $addToSet: { friends: friendId } },
           { new: true }
         ).populate('friends');
-    
+
         return updatedUser;
       }
-    
+
       throw new AuthenticationError('You need to be logged in!');
     }
   }
