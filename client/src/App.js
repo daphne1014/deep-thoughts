@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { setContext } from '@apollo/client/link/context';
+
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -14,17 +16,18 @@ import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: '/graphql'
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('id_token');
+
   return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
-    },
-  };
+    }
+  }
 });
 
 const client = new ApolloClient({
@@ -43,8 +46,6 @@ function App() {
               <Route exact path="/" component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Signup} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/thought" component={SingleThought} />
               <Route exact path="/profile/:username?" component={Profile} />
               <Route exact path="/thought/:id" component={SingleThought} />
 
